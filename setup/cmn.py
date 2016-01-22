@@ -2,10 +2,11 @@ print("""USACO Training Program Project Setup & Submission Script
 Written in Python by Clive Chan\n
 Last Updated 9-5-2013\n""")
 
-import secrets """username, password, uri, main_dir"""
+"""username, password, uri"""
+import secrets
 
 template="""/*
-ID: """+username+"""
+ID: """+secrets.username+"""
 PROG: %x%
 LANG: C++
 */
@@ -22,18 +23,14 @@ EXPECTED OUTPUT:
 using namespace std;
 
 int main(){
-	ifstream fin(\""""+main_dir+"""/%x%/%x%.in\");
-	//input
-	fin.close();
-	
+	ifstream fin(\"./%x%.in\");
+	ofstream fout(\"./%x%.out\");
 	
 	
 	//Program goes here. Mhm.
 	
 	
-	
-	ofstream fout(\""""+main_dir+"""/%x%/%x%.out\");
-	//output
+	fin.close();
 	fout.close();
 }
 """
