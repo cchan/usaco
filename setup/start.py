@@ -12,7 +12,7 @@ from re import compile as regexCompile
 from html2text import html2text
 from secrets import username, password
 
-browser = Browser()
+browser = Browser(soup_config={"features":"html.parser"})
 login_page = browser.get("http://train.usaco.org/usacogate")
 login_form = Form(login_page.soup.select("form")[0])
 login_form.input({"NAME":username,"PASSWORD":password})
