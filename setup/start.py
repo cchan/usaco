@@ -18,7 +18,7 @@ sampleoutput = probpage.soup.find(text=regexCompile("SAMPLE OUTPUT")).findNext("
 
 # their html is disturbingly bad
 problemstatement = probpage.soup.select("p")[0].decode_contents(formatter="html")
-problemstatement = html2text(problemstatement[0:problemstatement.find("<h3>SAMPLE INPUT (")])
+problemstatement = html2text(problemstatement[0:problemstatement.find("<form action=\"/upload3\"")])
 
 
 startcode = """/*
