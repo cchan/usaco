@@ -1,8 +1,6 @@
 # u
 # Wrapper around upload.py with utility functionality
 
-alias npp="\"C:\Program Files (x86)\Notepad++\notepad++.exe\""
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 name=$(python "$DIR/setup/upload.py" $1)
 if [ "$?" = "0" ]; then

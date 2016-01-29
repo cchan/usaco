@@ -24,6 +24,8 @@ int main(){
 	ifstream fin("wormhole.in");
 	
 	/* Problem: Wormholes (wormhole)
+![](/usaco/cow1.jpg) **Wormholes**  
+
 Farmer John's hobby of conducting high-energy physics experiments on weekends
 has backfired, causing N wormholes (2 <= N <= 12, N even) to materialize on
 his farm, each located at a distinct point on the 2D map of his farm (the x,y
@@ -68,8 +70,6 @@ Lines 2..1+N:|  Each line contains two space-separated integers describing the
 0..1,000,000,000.  
   
 ### SAMPLE INPUT (file wormhole.in):
-
-</p
 
 
 	*/
