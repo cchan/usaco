@@ -3,3 +3,4 @@ secrets.*
 *.out
 __pycache__
 *.pyc
+uploadout.txt

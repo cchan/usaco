@@ -5,24 +5,14 @@ Copyright (c)2016 Clive Chan
 MIT License
 """
 
-import sys
-import os
-from mechanicalsoup import Browser, Form # We need our own installation (straight from the repo) because the pip package doesn't have choose_submit
+from common import *
 from re import compile as regexCompile
-from html2text import html2text
-from secrets import username, password
 
-browser = Browser(soup_config={"features":"html.parser"})
-login_page = browser.get("http://train.usaco.org/usacogate")
-login_form = Form(login_page.soup.select("form")[0])
-login_form.input({"NAME":username,"PASSWORD":password})
-login_form.choose_submit(login_page.soup.select("form")[0].select("input")[2])
+mainpage = loginToMainPage()
+name = getName()
+fullname = getFull()
 
-page2 = browser.submit(login_form, login_page.url)
-fullname = page2.soup.select("a")[6].decode_contents(formatter="html").strip()
-name = page2.soup.select("a")[6]['href']
-name = name[name.find("&S=")+3:]
-probpage = browser.get("http://train.usaco.org"+page2.soup.select("a")[6]['href'])
+probpage = newBrowser().get("http://train.usaco.org"+mainpage.soup.select("a")[6]['href'])
 sampleinput = probpage.soup.find(text=regexCompile("SAMPLE INPUT")).findNext("pre").contents[0].strip()
 sampleoutput = probpage.soup.find(text=regexCompile("SAMPLE OUTPUT")).findNext("pre").contents[0].strip()
 
@@ -32,7 +22,7 @@ problemstatement = html2text(problemstatement[0:problemstatement.find("<h3>SAMPL
 
 
 startcode = """/*
-ID: doobahe1
+ID: """+username+"""
 PROG: """+name+"""
 LANG: C++
 */
@@ -65,22 +55,22 @@ int main(){
 if not os.path.exists(name):
     os.makedirs(name)
 
-if not os.path.exists(name+'/'+name+'.cpp'): # Yeah, there are race conditions, but if that's actually relevant in this context you're doing something very wrong
-	with open(name+'/'+name+'.cpp', 'w') as filecpp:
+if not os.path.exists(dir+'/'+name+'/'+name+'.cpp'): # Yeah, there are race conditions, but if that's actually relevant in this context you're doing something very wrong
+	with open(dir+'/'+name+'/'+name+'.cpp', 'w') as filecpp:
 		filecpp.write(startcode)
 		sys.stderr.write("write "+name+".cpp\n")
 else:
 	sys.stderr.write(name+".cpp already exists, nothing written\n")
 
-if not os.path.exists(name+'/'+name+'.in'):
-	with open(name+'/'+name+'.in', 'w') as filein:
+if not os.path.exists(dir+'/'+name+'/'+name+'.in'):
+	with open(dir+'/'+name+'/'+name+'.in', 'w') as filein:
 		filein.write(sampleinput+"\n")
 		sys.stderr.write("write "+name+".in\n")
 else:
 	sys.stderr.write(name+".in already exists, nothing written\n")
 
-if not os.path.exists(name+'/'+name+'.out'):
-	with open(name+'/'+name+'.out', 'w') as fileout:
+if not os.path.exists(dir+'/'+name+'/'+name+'.out'):
+	with open(dir+'/'+name+'/'+name+'.out', 'w') as fileout:
 		fileout.write(sampleoutput+"\n")
 		sys.stderr.write("write "+name+".out\n")
 else:

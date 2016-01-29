@@ -1,3 +1,14 @@
 # IN SHELL, RUN WITH:
 #. s
-name=`python setup/start.py` && cd $name && npp $name.cpp
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+name=$(python "$DIR/setup/start.py")
+
+if [ ! "$?" = "0" ]; then
+	echo An error occurred.
+else
+	echo Done.
+fi
+
+cd "$DIR/$name"
+npp "$DIR/$name/$name.cpp"

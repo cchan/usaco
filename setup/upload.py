@@ -5,25 +5,45 @@ Copyright (c)2016 Clive Chan
 MIT License
 """
 
-import sys
-import os
-import mechanize
-import warnings
-import re
-import html2text
-warnings.filterwarnings("ignore")
-execfile("secrets.py") #Just username and password var defs
+from common import *
+import requests
 
-browser = mechanicalsoup.Browser()
-login_page = browser.get("http://train.usaco.org/usacogate")
-login_form = mechanicalsoup.Form(login_page.soup.select("form")[0])
-login_form.input({"NAME":username,"PASSWORD":password})
-login_form.choose_submit(login_page.soup.select("form")[0].select("input")[2])
+mainpage = loginToMainPage()
+isMostRecentOne = True
 
-page2 = browser.submit(login_form, login_page.url)
-fullname = page2.soup.select("a")[6].decode_contents(formatter="html").strip()
-name = page2.soup.select("a")[6]['href']
-name = name[name.find("&S=")+3:]
+if len(sys.argv) > 1:
+	name = sys.argv[1]
+else:
+	name = getName()
 
-upload_form = mechanicalsoup.Form(page2.soup.select("form")[1])
-upload_form.
+if name == getName():
+	isMostRecentOne = True
+
+upload_form = Form(mainpage.soup.select("form")[1])
+
+sys.stderr.write("Uploading...\n")
+
+if not os.path.exists(dir+'/'+name+'/'+name+'.cpp'):
+	sys.stderr.write('Expected file '+name+'/'+name+'.cpp: not found\n')
+	sys.exit(1)
+else:
+	res = requests.post(
+		url="http://train.usaco.org"+upload_form.form['action'],
+		data={element['name']: element['value'] for element in mainpage.soup.find_all('input') if all (k in element.attrs for k in ('name','value'))},
+		files={'filename': open(dir+'/'+name+'/'+name+'.cpp', 'rb')})
+
+	uploadoutfile = dir+'/'+name+'/uploadout.txt'
+	open(uploadoutfile,'w').write(html2text(res.text[res.text.find('<div style=background-color:white;padding:5px;><pre>')+47:res.text.find("<a href='/usacodatashow?a=")]))
+
+	if res.text.find(" produced all correct answers!") != -1:
+		sys.stderr.write("Passed all test cases! ")
+		if isMostRecentOne:
+			sys.stderr.write("Getting next one... ")
+			print(name)
+		sys.stderr.write("\n")
+		sys.exit(0)
+	else:
+		sys.stderr.write("Failed some test cases.\n")
+		print(uploadoutfile);
+		sys.exit(1)
+

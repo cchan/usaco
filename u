@@ -1,0 +1,14 @@
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+name=$(python "$DIR/setup/upload.py" $1)
+if [ "$?" = "0" ]; then
+	if [ ! -z "$name" ]; then
+		. "$DIR/s"
+	fi
+elif [ ! -z "$name" ]; then
+	echo Opening compilation results...
+	sleep 1
+	less $name
+	echo Done.
+else
+	echo An error occurred.
+fi

@@ -38,7 +38,34 @@ called a PRIME CRYPTARITHM.
     
 
 Digits can appear only in places marked by `*'. Of course, leading zeroes are
-not allowed.  
+not allowed.
+
+**The partial products must be three digits long**, even though the general case (see below) might have four digit partial products.   
+  
+********** Note About Cryptarithm's Multiplication ************   
+In USA, children are taught to perform multidigit multiplication as described
+here. Consider multiplying a three digit number whose digits are 'a', 'b', and
+'c' by a two digit number whose digits are 'd' and 'e':
+
+    
+    
+    [Note that this diagram shows far more digits in its results than
+    the required diagram above which has three digit partial products!]
+    
+              a b c     <-- number 'abc'
+            x   d e     <-- number 'de'; the 'x' means 'multiply'
+         -----------
+    p1      * * * *     <-- product of e * abc; first star might be 0 (absent)
+    p2    * * * *       <-- product of d * abc; first star might be 0 (absent)
+         -----------
+          * * * * *     <-- sum of p1 and p2 (e*abc + 10*d*abc) == de*abc
+    
+    
+
+Note that the 'partial products' are as taught in USA schools. The first
+partial product is the product of the final digit of the second number and the
+top number. The second partial product is the product of the first digit of
+the second number and the top number.
 
 Write a program that will find all solutions to the cryptarithm above for any
 subset of supplied non-zero single-digits.
@@ -53,14 +80,6 @@ separated non-zero digits with which to solve the cryptarithm
 
 
 	*/
-	
-	int N;
-	vector<int> digits(N);
-	fin >> N;
-	for(int i = 0; i < N; i++)
-		fin >> digits[i];
-	
-	
 	
 	fin.close();
 	fout.close();
