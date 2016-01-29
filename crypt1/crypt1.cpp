@@ -12,19 +12,15 @@ using namespace std;
 int main(){
 	/*
 	SAMPLE INPUT
-
 5
 2 3 4 6 8
-
 	SAMPLE OUTPUT
-
 1
-
 	*/
 	ofstream fout("crypt1.out");
 	ifstream fin("crypt1.in");
 	
-	/* Problem: Prime Cryptarithm(crypt1)
+	/* Problem: Prime Cryptarithm (crypt1)
  The following cryptarithm is a multiplication problem that can be
 solved by substituting digits from a specified set of N digits into the
 positions marked with *. If the set of prime digits {2,3,5,7} is
@@ -73,6 +69,12 @@ number.
 <p> Write a program that will find all solutions to the cryptarithm
 above for any subset of supplied non-zero single-digits.
 
+<h3>PROGRAM NAME: crypt1</h3>
+<h3>INPUT FORMAT</h3>
+<table border="1">
+<tr> <td> Line 1: </td> <td> N, the number of digits that will be used</td>
+<tr> <td> Line 2: </td> <td>N space separated non-zero digits with which to solve the cryptarithm </td>
+</tr></tr></table>
 
 	*/
 	

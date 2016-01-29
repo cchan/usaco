@@ -4,7 +4,7 @@ import mechanicalsoup
 import warnings
 import re
 warnings.filterwarnings("ignore")
-execfile("secrets.py")
+execfile("secrets.py") #Just username and password var defs
 
 browser = mechanicalsoup.Browser()
 login_page = browser.get("http://train.usaco.org/usacogate")
@@ -21,7 +21,8 @@ sampleinput = probpage.soup.find(text=re.compile("SAMPLE INPUT")).findNext("pre"
 sampleoutput = probpage.soup.find(text=re.compile("SAMPLE OUTPUT")).findNext("pre").contents[0].strip()
 
 problemstatement = probpage.soup.select("p")[0].decode_contents(formatter="html")
-problemstatement = problemstatement[0:problemstatement.find("<h3>PROGRAM NAME:")]
+problemstatement = problemstatement[0:problemstatement.find("<h3>SAMPLE INPUT (")]
+
 
 startcode = """/*
 ID: doobahe1
@@ -54,19 +55,24 @@ int main(){
 """
 
 
-
 if not os.path.exists(name):
     os.makedirs(name)
 if not os.path.exists(name+'/'+name+'.cpp'):
-	open(name+'/'+name+'.cpp', 'w').write(startcode)
+	with open(name+'/'+name+'.cpp', 'w') as filecpp:
+		filecpp.write(startcode)
+		sys.stderr.write("Wrote "+name+".cpp\n")
 else:
-	sys.stderr.write("CPP already exists, nothing written\n")
+	sys.stderr.write(name+".cpp already exists, nothing written\n")
 if not os.path.exists(name+'/'+name+'.in'):
-	open(name+'/'+name+'.in', 'w').write(sampleinput)
+	with open(name+'/'+name+'.in', 'w') as filein:
+		filein.write(sampleinput+"\n")
+		sys.stderr.write("Wrote "+name+".in\n")
 else:
 	sys.stderr.write("IN already exists, nothing written\n")
 if not os.path.exists(name+'/'+name+'.out'):
-	open(name+'/'+name+'.out', 'w').write(sampleoutput)
+	with open(name+'/'+name+'.out', 'w') as fileout:
+		fileout.write(sampleoutput+"\n")
+		sys.stderr.write("Wrote "+name+".out\n")
 else:
 	sys.stderr.write("OUT already exists, nothing written\n")
 
