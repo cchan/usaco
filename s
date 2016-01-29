@@ -1,5 +1,9 @@
-# IN SHELL, RUN WITH:
-#. s
+# s
+# Wrapper around start.py with utility functionality
+
+# best to run with ". s", so cd will work
+
+alias npp="\"C:\Program Files (x86)\Notepad++\notepad++.exe\""
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 name=$(python "$DIR/setup/start.py")

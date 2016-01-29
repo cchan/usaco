@@ -4,7 +4,7 @@ from html2text import html2text
 import os
 import sys
 
-dir = os.path.dirname(os.path.dirname(__file__))
+dir = os.path.dirname(os.path.dirname(__file__)).replace("\\","/")
 
 def newBrowser():
 	return Browser(soup_config={"features":"html.parser"})

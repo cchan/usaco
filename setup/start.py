@@ -24,7 +24,7 @@ problemstatement = html2text(problemstatement[0:problemstatement.find("<form act
 startcode = """/*
 ID: """+username+"""
 PROG: """+name+"""
-LANG: C++
+LANG: C++11
 */
 #include <fstream>
 #include <vector>
@@ -52,8 +52,8 @@ int main(){
 """
 
 
-if not os.path.exists(name):
-    os.makedirs(name)
+if not os.path.exists(dir+'/'+name):
+    os.makedirs(dir+'/'+name)
 
 if not os.path.exists(dir+'/'+name+'/'+name+'.cpp'): # Yeah, there are race conditions, but if that's actually relevant in this context you're doing something very wrong
 	with open(dir+'/'+name+'/'+name+'.cpp', 'w') as filecpp:
