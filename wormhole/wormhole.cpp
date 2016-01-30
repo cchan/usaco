@@ -74,6 +74,27 @@ Lines 2..1+N:|  Each line contains two space-separated integers describing the
 
 	*/
 	
+	int N;
+	fin >> N;
+	vector<int> x(N), y(N);
+	for(int i = 0; i < N; i++)
+		fin >> x[i] >> y[i];
+	
+	map<int, vector<int> > m; // y, [x_i]
+	for(int i = 0; i < N; i++){
+		if(m.find(y[i]) == m.end())
+			m[y[i]] = vector<int>();
+		m[y[i]].push_back(x[i]);
+	}
+	for(pair<int, vector<int> > p : m)
+	sort(p.second.begin(),p.second.end());
+	
+	map<int, int> connections; //leaving this portal, which portal does it enter next?
+	for(int i = 0; i < N; i++){
+		connections[i] = find(m[y[i]].begin(),m[y[i]].end(),x[i]) - m[y[i]].begin();
+	}
+	
+	
 	fin.close();
 	fout.close();
 }
