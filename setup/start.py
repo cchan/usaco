@@ -17,7 +17,7 @@ sampleinput = probpage.soup.find(text=regexCompile("SAMPLE INPUT")).findNext("pr
 sampleoutput = probpage.soup.find(text=regexCompile("SAMPLE OUTPUT")).findNext("pre").contents[0].strip()
 
 # their html is disturbingly bad
-problemstatement = probpage.soup.select("body")[0].decode_contents(formatter="html")
+problemstatement = probpage.soup.decode_contents(formatter="html")
 problemstatement = html2text(problemstatement) # [0:problemstatement.find("<form action=\"/upload3\"")]
 
 
