@@ -1,14 +1,27 @@
+# C
+# a compilation script for usaco stuff
+# usage:
+#	./c				# runs the cpp file with name matching directory
+#	./c progname	# runs the specified cpp
+
 echo Compiling...
-g++ -std=c++11 ${PWD##*/}.cpp -o ${PWD##*/}
+
+if [ "$1" != "" ]; then
+	name=$1
+else
+	name=${PWD##*/}
+fi
+
+g++ -std=c++11 $name.cpp -o $name
 if [ "$?" = "0" ]; then
 	echo Compiled. Running...
-	./${PWD##*/}.exe $*
+	./$name.exe $*
 	if [ ! "$?" == "0" ]; then
 		echo Error running program.
 	fi
 	
 	echo FILE OUTPUT:
-	cat ${PWD##*/}.out
+	cat $name.out
 	echo
 else
 	echo Error compiling.
