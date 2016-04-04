@@ -5,96 +5,85 @@ LANG: C++11
 */
 #include <fstream>
 #include <vector>
+#include <map>
 #include <iostream>
 #include <algorithm>
 using namespace std;
 
+bool hasCycle(vector<int> edges){
+  vector<bool> checked(edges.size(),false);
+  for(int i = 0; i < edges.size(); i++){
+    if(checked[i])
+      continue;
+    
+    int iters = 0;
+    int curr = i;
+    while(curr >= 0 && iters < edges.size() + 1){
+      checked[curr] = true;
+      curr = edges[curr];
+      iters++;
+    }
+    if(iters == edges.size() + 1)
+      return true;
+  }
+  return false;
+}
+
+int countCyclicGraphs(vector<int> incompleteGraph){
+  //Now just pair up the -2s recursively.
+  int firstIndex = find(incompleteGraph.begin(),incompleteGraph.end(),-2) - incompleteGraph.begin();
+  if(firstIndex == incompleteGraph.size())
+    return hasCycle(incompleteGraph);
+  
+  int sum = 0;
+  for(int i = firstIndex + 1; i < incompleteGraph.size(); i++)
+    if(incompleteGraph[i] == -2){
+      incompleteGraph[firstIndex] = i + 1; // to go to the output of the wormhole, add 1
+      incompleteGraph[i] = firstIndex + 1;
+      sum += countCyclicGraphs(incompleteGraph);
+      incompleteGraph[firstIndex] = incompleteGraph[i] = -2;
+    }
+  
+  return sum;
+}
+
+
 int main(){
-	/*
-	SAMPLE INPUT
-4
-0 0
-1 0
-1 1
-0 1
-	SAMPLE OUTPUT
-2
-	*/
 	ofstream fout("wormhole.out");
 	ifstream fin("wormhole.in");
 	
-	/* Problem: Wormholes (wormhole)
-![](/usaco/cow1.jpg) **Wormholes**  
-
-Farmer John's hobby of conducting high-energy physics experiments on weekends
-has backfired, causing N wormholes (2 <= N <= 12, N even) to materialize on
-his farm, each located at a distinct point on the 2D map of his farm (the x,y
-coordinates are both integers).
-
-According to his calculations, Farmer John knows that his wormholes will form
-N/2 connected pairs. For example, if wormholes A and B are connected as a
-pair, then any object entering wormhole A will exit wormhole B moving in the
-same direction, and any object entering wormhole B will similarly exit from
-wormhole A moving in the same direction. This can have rather unpleasant
-consequences.
-
-For example, suppose there are two paired wormholes A at (1,1) and B at (3,1),
-and that Bessie the cow starts from position (2,1) moving in the +x direction.
-Bessie will enter wormhole B [at (3,1)], exit from A [at (1,1)], then enter B
-again, and so on, getting trapped in an infinite cycle!
-
-    
-    
-       | . . . .
-       | A > B .      Bessie will travel to B then
-       + . . . .      A then across to B again
-    
-
-Farmer John knows the exact location of each wormhole on his farm. He knows
-that Bessie the cow always walks in the +x direction, although he does not
-remember where Bessie is currently located.
-
-Please help Farmer John count the number of distinct pairings of the wormholes
-such that Bessie could possibly get trapped in an infinite cycle if she starts
-from an unlucky position. FJ doesn't know which wormhole pairs with any other
-wormhole, so find all the possibilities.
-
-### PROGRAM NAME: wormhole
-
-### INPUT FORMAT:
-
-Line 1:|  The number of wormholes, N.  
----|---  
-Lines 2..1+N:|  Each line contains two space-separated integers describing the
-(x,y) coordinates of a single wormhole. Each coordinate is in the range
-0..1,000,000,000.  
-  
-### SAMPLE INPUT (file wormhole.in):
-
-
-	*/
 	
 	int N;
 	fin >> N;
 	vector<int> x(N), y(N);
 	for(int i = 0; i < N; i++)
 		fin >> x[i] >> y[i];
+  
+  map<int, int> wormholesByY; //y => number of wormholes in that row
+  for(int i = 0; i < N; i++)
+    wormholesByY[y[i]]++;
+  
+  vector<int> wormholesByRow; //array of numbers of wormholes in rows
+  transform(wormholesByY.begin(),wormholesByY.end(),back_inserter(wormholesByRow), [](map<int,int>::value_type& val){return val.second;});
+  
+  vector<bool> doesWormholeEnd(N,false); //does the wormhole exit go off to infinity? (otherwise, it'll go to another wormhole)
+  int index = -1;
+  for(int i = 0; i < wormholesByRow.size(); i++)
+    doesWormholeEnd[index += wormholesByRow[i]] = true;
+  
+  //now make this into a directed graph
+  vector<int> edges(N*2); //where now => where going (-1 is no more wormholes, -2 is not yet defined)
+  for(int i = 0; i < N; i++){
+    //for each wormhole, there's an in-hole and an out-hole
+    edges[2*i] = -2; //not yet defined for in-hole
+    if(doesWormholeEnd[i])
+      edges[2*i+1] = -1; //goes off to infinity for out-hole
+    else
+      edges[2*i+1] = (2*i+1)+1; //goes to next wormhole for out-hole
+  }
 	
-	map<int, vector<int> > m; // y, [x_i]
-	for(int i = 0; i < N; i++){
-		if(m.find(y[i]) == m.end())
-			m[y[i]] = vector<int>();
-		m[y[i]].push_back(x[i]);
-	}
-	for(pair<int, vector<int> > p : m)
-	sort(p.second.begin(),p.second.end());
-	
-	map<int, int> connections; //leaving this portal, which portal does it enter next?
-	for(int i = 0; i < N; i++){
-		connections[i] = find(m[y[i]].begin(),m[y[i]].end(),x[i]) - m[y[i]].begin();
-	}
-	
-	
+  fout << countCyclicGraphs(edges) << endl;
+  
 	fin.close();
 	fout.close();
 }
