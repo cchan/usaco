@@ -12,7 +12,7 @@ else
 	name=${PWD##*/}
 fi
 
-g++ -std=c++11 $name.cpp -o $name
+g++ -std=c++11 $name.cpp -o $name.exe
 if [ "$?" = "0" ]; then
 	echo Compiled. Running...
 	./$name.exe $*
